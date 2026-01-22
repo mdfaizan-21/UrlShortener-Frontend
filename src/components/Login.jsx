@@ -4,11 +4,11 @@ import TextField from './TextField';
 import { Link, useNavigate } from 'react-router-dom';
 import api from '../api/api';
 import toast from 'react-hot-toast';
-
+import { useStoreContext } from '../contextApi/ContextApi';
 const Login = () => {
     const navigate = useNavigate();
     const [loader, setLoader] = useState(false);
-
+    const {setToken} = useStoreContext();
     const {
         register,
         handleSubmit,
@@ -32,9 +32,10 @@ const Login = () => {
             );
             toast.success("Login Successful!")
             localStorage.setItem("token", response.token);
+            setToken(response.token);
             console.log(response.token);
             reset();
-            navigate("/dashboard");
+            navigate("/");
         } catch (error) {
             console.log(error);
             toast.error("Login Failed!")
