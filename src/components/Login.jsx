@@ -8,7 +8,7 @@ import { useStoreContext } from '../contextApi/ContextApi';
 const Login = () => {
     const navigate = useNavigate();
     const [loader, setLoader] = useState(false);
-    const {setToken} = useStoreContext();
+    const { setToken } = useStoreContext();
     const {
         register,
         handleSubmit,
@@ -35,7 +35,7 @@ const Login = () => {
             setToken(response.token);
             console.log(response.token);
             reset();
-            navigate("/");
+            navigate("/dashboard");
         } catch (error) {
             console.log(error);
             toast.error("Login Failed!")
