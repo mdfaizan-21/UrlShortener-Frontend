@@ -48,7 +48,7 @@ const LandingPage = () => {
               viewport={{ once: true }}
               transition={{ duration: 0.8 }}
               onClick={dashBoardNavigateHandler}
-              className="bg-custom-gradient  w-40 text-white rounded-md  py-2"
+              className="bg-custom-gradient  w-40 text-white rounded-md  py-2 cursor-pointer"
             >
               Manage Links
             </motion.button>
@@ -61,7 +61,7 @@ const LandingPage = () => {
               viewport={{ once: true }}
               transition={{ duration: 0.8 }}
               onClick={dashBoardNavigateHandler}
-              className="border-btnColor border w-40 text-btnColor rounded-md  py-2 "
+              className="border-btnColor border w-40 text-btnColor rounded-md  py-2 cursor-pointer"
             >
               Create Short Link
             </motion.button>

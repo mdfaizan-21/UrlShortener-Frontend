@@ -44,7 +44,7 @@ export const useFetchTotalClicks = (token, onError) => {
         // 2. The function that actually talks to the backend.
         queryFn: async () => {
             const response = await api.get(
-                "/api/urls/totalClicks?startDate=2024-01-01&endDate=2025-12-31",
+                "/api/urls/totalClicks?startDate=2026-01-01&endDate=2026-12-31",
                 {
                     headers: {
                         Authorization: "Bearer " + token,
