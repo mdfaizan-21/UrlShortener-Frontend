@@ -34,8 +34,7 @@ const CreateNewShorten = ({ setOpen, refetch }) => {
                 },
             });
 
-            const domain = import.meta.env.VITE_REACT_FRONT_END_URL.replace(/^https?:\/\//, "");
-            const shortenUrl = `url.${domain}/${res.shortUrl}`;
+            const shortenUrl = `${import.meta.env.VITE_REACT_FRONT_END_URL + "/s/" + `${res.shortUrl}`}`;
             navigator.clipboard.writeText(shortenUrl).then(() => {
                 toast.success("Short URL Copied to Clipboard", {
                     position: "bottom-center",
