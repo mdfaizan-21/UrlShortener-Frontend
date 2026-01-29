@@ -17,13 +17,12 @@ const DashboardLayout = () => {
 
   // console.log(useFetchTotalClicks(token, onError));
 
-  const { isLoading, data: myShortenUrls, refetch } = useFetchMyShortUrls(token, onError)
-
-  const { isLoading: loader, data: totalClicks } = useFetchTotalClicks(token, onError)
-
   function onError() {
     navigate("/error");
   }
+  const { isLoading, data: myShortenUrls, refetch } = useFetchMyShortUrls(token, onError)
+
+  const { isLoading: loader, data: totalClicks } = useFetchTotalClicks(token, onError)
 
   return (
     <div className="lg:px-14 sm:px-8 px-4 min-h-[calc(100vh-64px)]">
