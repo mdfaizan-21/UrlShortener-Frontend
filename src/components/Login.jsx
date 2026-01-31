@@ -33,11 +33,9 @@ const Login = () => {
             toast.success("Login Successful!")
             localStorage.setItem("token", response.token);
             setToken(response.token);
-            console.log(response.token);
             reset();
             navigate("/dashboard");
         } catch (error) {
-            console.log(error);
             toast.error("Login Failed!")
         } finally {
             setLoader(false);

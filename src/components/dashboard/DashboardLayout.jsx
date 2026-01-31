@@ -15,8 +15,6 @@ const DashboardLayout = () => {
   const navigate = useNavigate();
   const [shortenPopUp, setShortenPopUp] = useState(false);
 
-  // console.log(useFetchTotalClicks(token, onError));
-
   function onError() {
     navigate("/error");
   }
