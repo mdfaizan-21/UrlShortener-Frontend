@@ -84,6 +84,17 @@ const Login = () => {
                     className='bg-customRed font-semibold text-white  bg-custom-gradient w-full py-2 hover:text-slate-400 transition-colors duration-100 rounded-sm my-3 cursor-pointer'>
                     {loader ? "Loading..." : "Login"}
                 </button>
+                
+                {loader && (
+                    <div className="fixed top-0 left-0 w-full h-full z-50 flex justify-center items-center bg-black/40 backdrop-blur-sm">
+                        <div className="bg-white p-10 rounded-md shadow-lg flex flex-col justify-center items-center gap-4">
+                            <h1 className="text-red-500 text-2xl font-bold">Please Wait!</h1>
+                            <p className="text-slate-800 font-semibold text-lg text-center max-w-xs">
+                                Our backend server is on free tier, so it takes 1-2 min to wake up.
+                            </p>
+                        </div>
+                    </div>
+                )}
 
                 <p className='text-center text-sm text-slate-700 mt-6'>
                     Don't have an account?

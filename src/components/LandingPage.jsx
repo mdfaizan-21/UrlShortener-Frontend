@@ -1,9 +1,10 @@
 import { useNavigate } from "react-router-dom";
-import React from "react";
+import React, { useEffect } from "react";
 import { motion } from "framer-motion";
 
 import Card from "./Card";
 import { useStoreContext } from "../contextApi/ContextApi";
+import api from "../api/api";
 
 let desc =
   "Generate short, memorable links with ease using Linklytics’s intuitive interface. Share URLs effortlessly across platforms. Optimize your sharing strategy with Linklytics. Track clicks and manage your links seamlessly to enhance your online presence. Generate short, memorable links with ease using Linklytics’s intuitive interface. Share URLs effortlessly across platforms.";
@@ -11,6 +12,19 @@ let desc =
 const LandingPage = () => {
   const navigate = useNavigate();
   const { token } = useStoreContext();
+
+  useEffect(() => {
+    // wake up the server (free tier sleep)
+    const wakeUp = async () => {
+      try {
+        await api.get("/api/home");
+      } catch (error) {
+        // ignore errors
+        console.log("Wake up call sent");
+      }
+    };
+    wakeUp();
+  }, []);
 
   const dashBoardNavigateHandler = () => {
 
