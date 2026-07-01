@@ -38,7 +38,7 @@ const CreateNewShorten = ({ setOpen, refetch }) => {
             navigator.clipboard.writeText(shortenUrl).then(() => {
                 toast.success("Short URL Copied to Clipboard", {
                     position: "bottom-center",
-                    className: "mb-5",
+                    className: "mb-5 text-sm",
                     duration: 3000,
                 });
             });
@@ -55,50 +55,51 @@ const CreateNewShorten = ({ setOpen, refetch }) => {
 
 
     return (
-        <div className=" flex justify-center items-center bg-white rounded-md">
+        <div className="flex justify-center items-center w-full h-full relative z-10">
             <form
                 onSubmit={handleSubmit(createShortUrlHandler)}
-                className="sm:w-[450px] w-[360px] relative  shadow-custom pt-8 pb-5 sm:px-8 px-4 rounded-lg"
+                className="sm:w-[450px] w-[360px] relative glass-panel pt-8 pb-6 sm:px-8 px-4 rounded-2xl overflow-hidden"
             >
+                <div className="absolute inset-0 bg-gradient-to-br from-violet-600/10 to-cyan-400/10 z-0 pointer-events-none"></div>
 
-                <h1 className="font-montserrat sm:mt-0 mt-3 text-center  font-bold sm:text-2xl text-[22px] text-slate-800 ">
-                    Create New Shorten Url
-                </h1>
+                <div className="relative z-10">
+                    <h1 className="font-bold sm:text-2xl text-[22px] text-white tracking-tight text-center mb-6">
+                        Create New Short URL
+                    </h1>
 
-                <hr className="mt-2 sm:mb-5 mb-3 text-slate-950" />
+                    <div>
+                        <TextField
+                            label="Enter Long URL"
+                            required
+                            id="originalUrl"
+                            placeholder="https://example.com/very-long-url"
+                            type="url"
+                            message="Url is required"
+                            register={register}
+                            errors={errors}
+                        />
+                    </div>
 
-                <div>
-                    <TextField
-                        label="Enter Long URL"
-                        required
-                        id="originalUrl"
-                        placeholder="https://example.com"
-                        type="url"
-                        message="Url is required"
-                        register={register}
-                        errors={errors}
-                    />
+                    <button
+                        className="bg-white text-black font-semibold w-full py-3 hover:bg-gray-200 transition-colors rounded-xl mt-6 cursor-pointer disabled:opacity-50"
+                        type="submit"
+                        disabled={loading}
+                    >
+                        {loading ? "Creating..." : "Shorten URL"}
+                    </button>
+
+                    {!loading && (
+                        <Tooltip title="Close">
+                            <button
+                                disabled={loading}
+                                onClick={() => setOpen(false)}
+                                className="absolute right-0 -top-2 hover:bg-white/10 p-1 rounded-full transition-colors"
+                            >
+                                <RxCross2 className="text-gray-400 text-2xl" />
+                            </button>
+                        </Tooltip>
+                    )}
                 </div>
-
-                <button
-                    className="bg-customRed font-semibold text-white w-32  bg-custom-gradient  py-2  transition-colors  rounded-md my-3 ml-28 cursor-pointer"
-                    type="text"
-                >
-                    {loading ? "Loading..." : "Create"}
-                </button>
-
-                {!loading && (
-                    <Tooltip title="Close">
-                        <button
-                            disabled={loading}
-                            onClick={() => setOpen(false)}
-                            className=" absolute right-2 top-2  "
-                        >
-                            <RxCross2 className="text-slate-800   text-3xl" />
-                        </button>
-                    </Tooltip>
-                )}
-
             </form>
         </div>
     )

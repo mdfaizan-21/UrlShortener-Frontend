@@ -43,67 +43,72 @@ const Login = () => {
     };
 
     return (
-        <div
-            className='min-h-[calc(100vh-64px)] flex justify-center items-center'>
+        <div className='min-h-[calc(100vh-64px)] flex justify-center items-center relative z-10'>
             <form onSubmit={handleSubmit(loginHandler)}
-                className="sm:w-[450px] w-[360px]  shadow-custom py-8 sm:px-8 px-4 rounded-md">
-                <h1 className="text-center font-serif text-btnColor font-bold lg:text-3xl text-2xl">
-                    Login Here
-                </h1>
-
-                <hr className='mt-2 mb-5 text-blue-500' />
-
-                <div className="flex flex-col gap-3">
-                    <TextField
-                        label="Username"
-                        required
-                        id="username"
-                        type="text"
-                        message="*Username is required"
-                        placeholder="Type your username"
-                        register={register}
-                        errors={errors}
-                    />
-
-                    <TextField
-                        label="Password"
-                        required
-                        id="password"
-                        type="password"
-                        message="*Password is required"
-                        placeholder="Type your password"
-                        register={register}
-                        min={6}
-                        errors={errors}
-                    />
-                </div>
-
-                <button
-                    disabled={loader}
-                    type='submit'
-                    className='bg-customRed font-semibold text-white  bg-custom-gradient w-full py-2 hover:text-slate-400 transition-colors duration-100 rounded-sm my-3 cursor-pointer'>
-                    {loader ? "Loading..." : "Login"}
-                </button>
+                className="sm:w-[450px] w-[360px] glass-panel py-8 sm:px-8 px-4 rounded-2xl relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-br from-violet-600/10 to-cyan-400/10 z-0 pointer-events-none"></div>
                 
-                {loader && (
-                    <div className="fixed top-0 left-0 w-full h-full z-50 flex justify-center items-center bg-black/40 backdrop-blur-sm">
-                        <div className="bg-white p-10 rounded-md shadow-lg flex flex-col justify-center items-center gap-4">
-                            <h1 className="text-red-500 text-2xl font-bold">Please Wait!</h1>
-                            <p className="text-slate-800 font-semibold text-lg text-center max-w-xs">
-                                Our backend server is on free tier, so it takes 1-2 min to wake up.
-                            </p>
-                        </div>
-                    </div>
-                )}
+                <div className="relative z-10">
+                    <h1 className="text-center font-bold text-white text-3xl mb-2 tracking-tight">
+                        Welcome back
+                    </h1>
+                    <p className="text-center text-gray-400 mb-8 text-sm">
+                        Enter your credentials to access your account
+                    </p>
 
-                <p className='text-center text-sm text-slate-700 mt-6'>
-                    Don't have an account?
-                    <Link
-                        className='font-semibold underline hover:text-black'
-                        to="/register">
-                        <span className='text-btnColor'> Sign Up</span>
-                    </Link>
-                </p>
+                    <div className="flex flex-col gap-5">
+                        <TextField
+                            label="Username"
+                            required
+                            id="username"
+                            type="text"
+                            message="*Username is required"
+                            placeholder="Type your username"
+                            register={register}
+                            errors={errors}
+                        />
+
+                        <TextField
+                            label="Password"
+                            required
+                            id="password"
+                            type="password"
+                            message="*Password is required"
+                            placeholder="Type your password"
+                            register={register}
+                            min={6}
+                            errors={errors}
+                        />
+                    </div>
+
+                    <button
+                        disabled={loader}
+                        type='submit'
+                        className='w-full bg-white text-black font-semibold py-3 rounded-xl hover:bg-gray-200 transition-colors duration-200 my-6 disabled:opacity-50'>
+                        {loader ? "Authenticating..." : "Sign in"}
+                    </button>
+                    
+                    {loader && (
+                        <div className="fixed inset-0 z-50 flex justify-center items-center bg-[#0A0A0A]/80 backdrop-blur-sm">
+                            <div className="bg-[#111] border border-white/10 p-10 rounded-2xl shadow-2xl flex flex-col justify-center items-center gap-4">
+                                <span className="flex h-10 w-10 rounded-full bg-violet-500 animate-pulse mb-2"></span>
+                                <h1 className="text-white text-2xl font-bold tracking-tight">Waking up server</h1>
+                                <p className="text-gray-400 font-medium text-sm text-center max-w-xs leading-relaxed">
+                                    Our backend is on a free tier and might take a minute to spin up. Hang tight!
+                                </p>
+                            </div>
+                        </div>
+                    )}
+
+                    <p className='text-center text-sm text-gray-400'>
+                        Don't have an account?
+                        <Link
+                            className='font-semibold text-white ml-2 hover:underline'
+                            to="/register">
+                            Sign up
+                        </Link>
+                    </p>
+                </div>
             </form>
         </div>
     )

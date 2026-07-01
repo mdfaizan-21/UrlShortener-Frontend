@@ -1,17 +1,17 @@
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import React, { useEffect } from "react";
 import { motion } from "framer-motion";
+import toast from "react-hot-toast";
 
 import Card from "./Card";
 import { useStoreContext } from "../contextApi/ContextApi";
 import api from "../api/api";
 
-let desc =
-  "Generate short, memorable links with ease using Linklytics’s intuitive interface. Share URLs effortlessly across platforms. Optimize your sharing strategy with Linklytics. Track clicks and manage your links seamlessly to enhance your online presence. Generate short, memorable links with ease using Linklytics’s intuitive interface. Share URLs effortlessly across platforms.";
-
 const LandingPage = () => {
   const navigate = useNavigate();
   const { token } = useStoreContext();
+  const [longUrl, setLongUrl] = useState("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     // wake up the server (free tier sleep)
@@ -20,110 +20,131 @@ const LandingPage = () => {
         await api.get("/api/home");
       } catch (error) {
         // ignore errors
-        console.log("Wake up call sent");
       }
     };
     wakeUp();
   }, []);
 
-  const dashBoardNavigateHandler = () => {
+  const handleShorten = async (e) => {
+    e.preventDefault();
+    if (!longUrl) return;
 
+    if (!token) {
+      navigate("/login");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const { data: res } = await api.post("/api/urls/shorten", { originalUrl: longUrl }, {
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: "Bearer " + token,
+        },
+      });
+      const shortenUrl = `${import.meta.env.VITE_REACT_FRONT_END_URL}/s/${res.shortUrl}`;
+      navigator.clipboard.writeText(shortenUrl).then(() => {
+        toast.success("Short URL Copied to Clipboard", {
+          position: "bottom-center",
+          className: "mb-5 text-sm",
+          duration: 3000,
+        });
+      });
+      setLongUrl("");
+    } catch (error) {
+      toast.error("Create ShortURL Failed");
+    } finally {
+      setLoading(false);
+    }
   };
+
   return (
-    <div className="min-h-[calc(100vh-64px)]  lg:px-14 sm:px-8 px-4">
-      <div className="lg:flex-row flex-col    lg:py-5   pt-16   lg:gap-10 gap-8 flex justify-between items-center">
-        <div className=" flex-1">
-          <motion.h1
-            initial={{ opacity: 0, y: -80 }}
-            whileInView={{
-              opacity: 1,
-              y: 0,
-            }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="font-bold font-roboto text-slate-800 md:text-5xl sm:text-4xl text-3xl   md:leading-[55px] sm:leading-[45px] leading-10 lg:w-full md:w-[70%] w-full"
+    <div className="flex flex-col items-center pt-16 pb-20 px-4 sm:px-6 lg:px-8 relative z-10">
+      {/* Hero Section */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+        className="max-w-4xl mx-auto text-center mt-12 sm:mt-20"
+      >
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 bg-white/5 backdrop-blur-md mb-8">
+          <span className="flex h-2 w-2 rounded-full bg-violet-500 animate-pulse"></span>
+          <span className="text-xs font-medium text-gray-300 tracking-wide uppercase">Linklytics 2.0 is live</span>
+        </div>
+
+        <h1 className="text-5xl sm:text-7xl font-extrabold tracking-tight text-white mb-6 leading-[1.1] sm:leading-[1.1]">
+          Shorten links. <br className="hidden sm:block" />
+          <span className="gradient-text">Expand your reach.</span>
+        </h1>
+
+        <p className="text-lg sm:text-xl text-gray-400 mb-10 max-w-2xl mx-auto leading-relaxed">
+          The developer-friendly URL shortener. Build, scale, and track your links with powerful analytics and lightning-fast edge redirects.
+        </p>
+
+        {/* Inline URL Shortener */}
+        <section className="flex items-center w-4xl">
+          <motion.form
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+            onSubmit={handleShorten}
+            className="relative w-full max-w-xl mx-auto flex items-center bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-2 shadow-[0_8px_32px_-8px_rgba(0,0,0,0.8)] focus-within:border-violet-500/50 transition-colors mr-0 ml-9"
           >
-            Linklytics Simplifies URL Shortening For Efficient Sharing.
-          </motion.h1>
-          <p className="text-slate-700 text-sm my-5">
-            Linklytics streamlines the process of URL shortening, making sharing
-            links effortless and efficient. With its user-friendly interface,
-            Linklytics allows you to generate concise, easy-to-share URLs in
-            seconds. Simplify your sharing experience with Linklytics today.
-          </p>
-          <div className="flex items-center gap-3">
-            <motion.button
-              initial={{ opacity: 0, y: 80 }}
-              whileInView={{
-                opacity: 1,
-                y: 0,
-              }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-              onClick={dashBoardNavigateHandler}
-              className="bg-custom-gradient  w-40 text-white rounded-md  py-2 cursor-pointer"
+            <div className="absolute inset-0 bg-gradient-to-r from-violet-600/10 to-cyan-400/10 rounded-2xl pointer-events-none"></div>
+            <input
+              type="url"
+              required
+              value={longUrl}
+              onChange={(e) => setLongUrl(e.target.value)}
+              placeholder="https://your-very-long-url.com/to-shorten"
+              className="w-full bg-transparent text-white placeholder-gray-500 px-4 sm:px-6 py-3 sm:py-4 outline-none text-base sm:text-lg relative z-10"
+
+            />
+            <button
+              type="submit"
+              disabled={loading}
+              className="relative z-10 bg-white text-black font-semibold px-6 sm:px-8 py-3 rounded-xl hover:bg-gray-200 transition-colors shrink-0 disabled:opacity-50 cursor-pointer"
             >
-              Manage Links
-            </motion.button>
-            <motion.button
-              initial={{ opacity: 0, y: 80 }}
-              whileInView={{
-                opacity: 1,
-                y: 0,
-              }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-              onClick={dashBoardNavigateHandler}
-              className="border-btnColor border w-40 text-btnColor rounded-md  py-2 cursor-pointer"
-            >
-              Create Short Link
-            </motion.button>
-          </div>
-        </div>
-        <div className="   flex-1 flex   justify-center w-full">
-          <motion.img
-            initial={{ opacity: 0 }}
-            whileInView={{
-              opacity: 1,
-            }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="sm:w-[480px] w-[400px] object-cover rounded-md"
-            src="/images/img2.png"
-            alt=""
-          />
-        </div>
-      </div>
-      <div className="sm:pt-12 pt-7">
-        <motion.p
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{
-            opacity: 1,
-            y: 0,
-          }}
-          viewport={{ once: true }}
+              {loading ? "Creating..." : "Shorten"}
+            </button>
+          </motion.form>
+          <motion.button onClick={() => { if (!token) navigate("/login"); else navigate("/dashboard") }} className="relative z-10 bg-white text-black font-semibold px-10 ml-2 mb-2 sm:px-5 py-4 rounded-xl hover:bg-gray-200 transition-colors shrink-0 disabled:opacity-50 cursor-pointer">
+            Manage Your Links
+          </motion.button>
+        </section>
+      </motion.div>
+
+      {/* Bento Grid Features */}
+      <div className="w-full max-w-6xl mx-auto mt-32 sm:mt-20">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.8 }}
-          className="text-slate-800 font-roboto font-bold lg:w-[60%]  md:w-[70%] sm:w-[80%] mx-auto text-3xl text-center"
+          className="text-center mb-16"
         >
-          Trusted by individuals and teams at the world best companies{" "}
-        </motion.p>
-        <div className="pt-4 pb-7 grid lg:gap-7 gap-4 xl:grid-cols-4  lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 mt-4">
+          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-white mb-4">
+            Everything you need. <span className="text-gray-500">Nothing you don't.</span>
+          </h2>
+        </motion.div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <Card
-            title="Simple URL Shortening"
-            desc="Experience the ease of creating short, memorable URLs in just a few clicks. Our intuitive interface and quick setup process ensure you can start shortening URLs without any hassle."
+            title="Lightning Fast"
+            desc="Global edge network ensures your links redirect instantly anywhere in the world."
           />
           <Card
-            title="Powerful Analytics"
-            desc="Gain insights into your link performance with our comprehensive analytics dashboard. Track clicks, geographical data, and referral sources to optimize your marketing strategies."
+            title="Real-time Analytics"
+            desc="Track clicks, locations, and referrers with our beautiful interactive dashboard."
           />
           <Card
-            title="Enhanced Security"
-            desc="Rest assured with our robust security measures. All shortened URLs are protected with advanced encryption, ensuring your data remains safe and secure."
+            title="Secure by Default"
+            desc="End-to-end encryption and advanced threat protection for all your shortened URLs."
           />
           <Card
-            title="Fast and Reliable"
-            desc="Enjoy lightning-fast redirects and high uptime with our reliable infrastructure. Your shortened URLs will always be available and responsive, ensuring a seamless experience for your users.
-"
+            title="Developer API"
+            desc="Integrate our powerful REST API directly into your applications and workflows."
           />
         </div>
       </div>

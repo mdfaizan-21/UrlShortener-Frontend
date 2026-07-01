@@ -30,15 +30,11 @@ ChartJS.register(
 const Graph = ({ graphData }) => {
     
     // 1. DATA PREPARATION
-    // Map the complex objects into simple arrays that Chart.js understands
-    // labels: ["2023-10-01", "2023-10-02"]
     const labels = graphData?.map((item) => `${item.clickDate}`);
-    // counts: [10, 25]
     const userPerDaya = graphData?.map((item) => item.count);
 
     // 2. CHART CONFIGURATION (The "What")
     const data = {
-        // If data exists, use real labels; otherwise, show blank slots for the placeholder
         labels: graphData.length > 0
                 ? labels
                 : ["", "", "", "", "", "", "", "", "", "", "", "", "", ""],
@@ -46,19 +42,19 @@ const Graph = ({ graphData }) => {
         datasets: [
             {
                 label: "Total Clicks",
-                // If data exists, use real counts; otherwise, use dummy numbers (1,2,3...) for a "ghost" graph
                 data: graphData.length > 0
                         ? userPerDaya
                         : [1, 2, 3, 4, 5, 6, 7, 6, 5, 4, 3, 2, 1],
                 
-                // Blue color if data is real, light gray-blue if it's just a placeholder
-                backgroundColor: graphData.length > 0 ? "#3b82f6" : "rgba(54, 162, 235, 0.1)",
+                // Blue-violet gradient feel for actual data, faint white for ghost data
+                backgroundColor: graphData.length > 0 ? "rgb(0, 236, 159)" : "rgba(255, 255, 255, 0.05)",
                 
-                borderColor: "#1D2327",
-                pointBorderColor: "red",
+                borderColor: "transparent",
+                pointBorderColor: "transparent",
                 fill: true,
-                tension: 0.4,      // Adds a slight curve/smoothness (mostly used for Line charts)
-                barThickness: 20,  // The width of each bar in pixels
+                tension: 0.4,
+                barThickness: 20,
+                borderRadius: 4,
                 categoryPercentage: 1.5,
                 barPercentage: 1.5,
             },
@@ -67,19 +63,38 @@ const Graph = ({ graphData }) => {
 
     // 3. CHART OPTIONS (The "How it Looks")
     const options = {
-        maintainAspectRatio: false, // Allows the chart to fill the height of its container
-        responsive: true,           // Chart resizes automatically when the window changes
+        maintainAspectRatio: false, 
+        responsive: true,           
         plugins: {
             legend: {
-                display: true,      // Shows the "Total Clicks" dataset label
+                display: true,      
+                labels: {
+                    color: "#9ca3af", // text-gray-400
+                    font: {
+                        family: "'Inter', sans-serif",
+                        weight: "500"
+                    }
+                }
             },
+            tooltip: {
+                backgroundColor: "rgba(10, 10, 10, 0.9)",
+                titleColor: "#ffffff",
+                bodyColor: "#d1d5db",
+                borderColor: "rgba(255,255,255,0.1)",
+                borderWidth: 1,
+                padding: 12,
+                cornerRadius: 8,
+            }
         },
         scales: {
             y: {
-                beginAtZero: true,  // Forces the Y-axis to start at 0 (essential for honest data)
+                beginAtZero: true, 
+                grid: {
+                    color: "rgba(255,255,255,0.05)", // Faint white grid lines
+                    drawBorder: false,
+                },
                 ticks: {
-                    // Logic to ensure the Y-axis only shows whole numbers (1, 2, 3...)
-                    // and doesn't show 1.5 or 2.5 clicks
+                    color: "#9ca3af",
                     callback: function (value) {
                         if (Number.isInteger(value)) {
                             return value.toString();
@@ -90,21 +105,29 @@ const Graph = ({ graphData }) => {
                 title: {
                     display: true,
                     text: "Number Of Clicks",
-                    font: { weight: "bold", color: "#FF0000" },
+                    color: "#d1d5db",
+                    font: { weight: "600", family: "'Inter', sans-serif" },
                 },
             },
             x: {
+                grid: {
+                    display: false,
+                    drawBorder: false,
+                },
+                ticks: {
+                    color: "#9ca3af",
+                },
                 title: {
                     display: true,
                     text: "Date",
-                    font: { weight: "bold", color: "#FF0000" },
+                    color: "#d1d5db",
+                    font: { weight: "600", family: "'Inter', sans-serif" },
                 },
             },
         },
     };
 
     // 4. RENDERING
-    // Renders the Bar chart component with all the defined data and settings
     return <Bar className="w-full" data={data} options={options}></Bar>;
 };
 

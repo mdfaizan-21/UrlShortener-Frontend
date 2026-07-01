@@ -23,7 +23,7 @@ export const useFetchMyShortUrls = (token, onError) => {
             // We want the newest links first, so we sort them by their creation date.
             // We make a copy of the data first so we don't accidentally mess up the original.
             const sorted = [...rawData].sort((a, b) => {
-                return new Date(b.createdDate) - new Date(a.createdDate);
+                return new Date(b.createdTime) - new Date(a.createdTime);
             });
             return sorted;
         },

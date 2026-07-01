@@ -23,41 +23,42 @@ const DashboardLayout = () => {
   const { isLoading: loader, data: totalClicks } = useFetchTotalClicks(token, onError)
 
   return (
-    <div className="lg:px-14 sm:px-8 px-4 min-h-[calc(100vh-64px)]">
+    <div className="lg:px-14 sm:px-8 px-4 min-h-[calc(100vh-64px)] relative z-10">
       {loader ? (
         <Loader />
       ) : (
         <div className="lg:w-[90%] w-full mx-auto py-16">
-          <div className=" h-96 relative ">
+          <div className="h-96 relative glass-panel rounded-2xl p-6 mb-8">
             {totalClicks.length === 0 && (
-              <div className="absolute flex flex-col  justify-center sm:items-center items-end  w-full left-0 top-0 bottom-0 right-0 m-auto">
-                <h1 className=" text-slate-800 font-serif sm:text-2xl text-[18px] font-bold mb-1">
+              <div className="absolute inset-0 flex flex-col justify-center items-center z-10">
+                <h1 className="text-white font-bold sm:text-2xl text-lg mb-2">
                   No Data For This Time Period
                 </h1>
-                <h3 className="sm:w-96 w-[90%] sm:ml-0 pl-6 text-center sm:text-lg text-sm text-slate-600 ">
+                <h3 className="sm:w-96 w-[90%] text-center sm:text-base text-sm text-gray-400">
                   Share your short link to view where your engagements are
-                  coming from
+                  coming from.
                 </h3>
               </div>
             )}
             <Graph graphData={totalClicks} />
           </div>
-          <div className='py-5 sm:text-end text-center'>
+          
+          <div className='py-5 flex justify-end'>
             <button
-              className='bg-custom-gradient px-4 py-2 rounded-md text-white cursor-pointer'
+              className='bg-white text-black font-semibold px-6 py-3 rounded-xl hover:bg-gray-200 transition-colors cursor-pointer shadow-lg shadow-white/5'
               onClick={() => setShortenPopUp(true)}>
-              Create a New Short URL
+              Create New Short URL
             </button>
           </div>
 
           <div>
             {!isLoading && myShortenUrls.length === 0 ? (
               <div className="flex justify-center pt-16">
-                <div className="flex gap-2 items-center justify-center  py-6 sm:px-8 px-5 rounded-md   shadow-lg  bg-gray-50">
-                  <h1 className="text-slate-800 font-montserrat   sm:text-[18px] text-[14px] font-semibold mb-1 ">
-                    You haven't created any short link yet
+                <div className="flex gap-3 items-center justify-center py-8 px-8 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm shadow-xl">
+                  <FaLink className="text-violet-500 sm:text-2xl text-xl" />
+                  <h1 className="text-white font-semibold sm:text-lg text-base">
+                    You haven't created any short links yet
                   </h1>
-                  <FaLink className="text-blue-500 sm:text-xl text-sm " />
                 </div>
               </div>
             ) : (
